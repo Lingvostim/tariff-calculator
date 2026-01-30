@@ -15,7 +15,6 @@
   --muted:rgba(255,255,255,.62);
   --accent:#6b5cff;
   --success:#16a34a;
-  --danger:#ef4444;
   --radius:18px;
 }
 
@@ -47,6 +46,11 @@ h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}
   border-radius:var(--radius);
   overflow:hidden;
   box-shadow:0 18px 60px rgba(0,0,0,.35);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 22px 70px rgba(0,0,0,.45);
 }
 
 .head{
@@ -76,6 +80,7 @@ input{
   border:1px solid var(--line);
   color:var(--text);
   font-size:15px;
+  transition:border-color .15s ease, box-shadow .15s ease;
 }
 input:focus{
   outline:none;
@@ -85,10 +90,8 @@ input:focus{
 
 /* hide native spinners */
 input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button{
-  -webkit-appearance:none;margin:0
-}
-input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0 }
+input[type=number]{ -moz-appearance:textfield }
 
 .stepper{
   position:absolute;
@@ -112,11 +115,9 @@ input[type=number]{-moz-appearance:textfield}
   justify-content:center;
   padding:0;
   user-select:none;
+  transition:background .12s ease, transform .12s ease;
 }
-.stepBtn:hover{background:rgba(255,255,255,.1)}
-.stepBtn svg{width:12px;height:12px}
-
-.help{margin-top:6px;color:var(--muted);font-size:12px}
+.stepBtn:active{transform:translateY(1px)}
 
 .actions{
   display:flex;
@@ -130,11 +131,13 @@ button{
   border:0;
   cursor:pointer;
   font-weight:700;
+  transition:transform .12s ease, box-shadow .12s ease;
 }
 button.primary{
   background:linear-gradient(135deg,var(--accent),rgba(107,92,255,.8));
   color:white;
 }
+button.primary:active{transform:translateY(1px)}
 button.secondary{
   background:rgba(255,255,255,.08);
   border:1px solid var(--line);
@@ -142,15 +145,6 @@ button.secondary{
 }
 @media(max-width:640px){
   .actions button{flex:1 1 100%}
-}
-
-.status{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.05);
-  font-size:13px;
 }
 
 .summary{
@@ -168,6 +162,7 @@ button.secondary{
 }
 .pill.total b{color:var(--success);font-size:16px}
 
+/* TABLE */
 .tableWrap{
   overflow:auto;
   border-radius:14px;
@@ -181,23 +176,47 @@ thead th{
   text-align:left;
   background:rgba(255,255,255,.04);
 }
+tbody tr{
+  animation:rowIn .25s ease both;
+}
 tbody td{
   padding:12px;
   border-top:1px solid rgba(255,255,255,.08);
 }
 td.right{text-align:right}
 
+@keyframes rowIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
+}
+
+/* MOBILE */
 .mobileList{display:none}
 @media(max-width:640px){
   .tableWrap{display:none}
   .mobileList{display:grid;gap:10px}
   .mobileCard{
-    padding:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    padding:16px 18px;
     border-radius:14px;
     border:1px solid var(--line);
     background:rgba(255,255,255,.06);
+    animation:rowIn .25s ease both;
   }
-  .mobileCard b{color:var(--success);font-size:16px}
+  .mc-left{
+    font-size:14px;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .mc-right{
+    font-size:16px;
+    font-weight:700;
+    color:var(--success);
+    white-space:nowrap;
+  }
 }
 </style>
 </head>
@@ -251,7 +270,6 @@ td.right{text-align:right}
 <button class="secondary" id="reset">Сброс</button>
 </div>
 
-<div class="status" id="status">Готово</div>
 </div>
 </section>
 
@@ -291,7 +309,6 @@ function clamp(input,v){
   const max=input.max!==""?+input.max:1e9
   return Math.min(max,Math.max(min,v))
 }
-
 function stepInput(input,dir){
   const step=input.step&&input.step!=="any"?+input.step:1
   input.value=clamp(input,(+input.value||0)+(dir==="up"?step:-step))
@@ -307,13 +324,9 @@ document.querySelectorAll("[data-stepper]").forEach(w=>{
 
   const start=dir=>{
     stepInput(input,dir)
-    t=setTimeout(()=>{
-      i=setInterval(()=>stepInput(input,dir),90)
-    },350)
+    t=setTimeout(()=>{ i=setInterval(()=>stepInput(input,dir),90) },350)
   }
-  const stop=()=>{
-    clearTimeout(t);clearInterval(i)
-  }
+  const stop=()=>{ clearTimeout(t); clearInterval(i) }
 
   up.addEventListener("pointerdown",e=>{e.preventDefault();start("up")})
   down.addEventListener("pointerdown",e=>{e.preventDefault();start("down")})
@@ -327,7 +340,7 @@ function calculate(){
   const max=+el("places").value
   const price=+el("price").value
   const min=+el("minPeople").value
-  if(min>max){el("status").textContent="Минимум больше максимума";return}
+  if(min>max)return
 
   el("tbody").innerHTML=""
   el("mobileList").innerHTML=""
@@ -335,13 +348,16 @@ function calculate(){
   for(let n=min;n<=max;n++){
     const total=n*price
     el("tbody").innerHTML+=`<tr><td>${n}</td><td class="right">${fmt.format(total)}</td></tr>`
-    el("mobileList").innerHTML+=`<div class="mobileCard"><span>${n} человек</span><b>${fmt.format(total)} ₽</b></div>`
+    el("mobileList").innerHTML+=`
+      <div class="mobileCard">
+        <span class="mc-left">${n} человек</span>
+        <b class="mc-right">${fmt.format(total)} ₽</b>
+      </div>`
   }
 
   el("sPlaces").textContent=max
   el("sPrice").textContent=fmt.format(price)+" ₽"
   el("sTotal").textContent=fmt.format(max*price)+" ₽"
-  el("status").textContent="Готово"
 }
 
 el("calc").onclick=calculate
