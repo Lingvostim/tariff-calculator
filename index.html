@@ -1,418 +1,318 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Калькулятор тарифов</title>
+
   <style>
-    :root{
-      --bg: #0b1020;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.09);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.65);
-      --line: rgba(255,255,255,.14);
+    :root {
+      --bg: #0f172a;
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.65);
       --accent: #7c5cff;
-      --accent2:#22c55e;
-      --danger:#ef4444;
-      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --accent-soft: rgba(124,92,255,0.25);
+      --success: rgba(34,197,94,0.15);
       --radius: 18px;
     }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font: 15px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(124,92,255,.25), transparent 55%),
-        radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.18), transparent 50%),
-        radial-gradient(1200px 900px at 50% 100%, rgba(255,255,255,.06), transparent 60%),
+        radial-gradient(1000px 600px at 10% 10%, rgba(124,92,255,0.25), transparent 50%),
+        radial-gradient(800px 600px at 90% 20%, rgba(34,197,94,0.2), transparent 55%),
         var(--bg);
-      min-height:100vh;
-      padding: 28px 16px;
+      color: var(--text);
+      padding: 24px 16px;
+      min-height: 100vh;
     }
 
-    .wrap{max-width: 980px; margin: 0 auto;}
-    header{
-      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
-      margin-bottom: 18px;
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
     }
-    h1{
-      font-size: clamp(20px, 3vw, 28px);
-      margin:0;
-      letter-spacing: .2px;
-    }
-    .hint{color:var(--muted); margin: 6px 0 0 0; font-size: 13px;}
 
-    .grid{
-      display:grid;
+    header {
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
     }
-    @media (min-width: 860px){
-      .grid{grid-template-columns: 360px 1fr;}
+
+    @media (min-width: 900px) {
+ {
+      .layout {
+        grid-template-columns: 360px 1fr;
+      }
     }
 
-    .card{
-      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.04));
-      border: 1px solid var(--line);
+    .card {
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.04));
+      border: 1px solid var(--border);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
+      padding: 16px;
     }
-    .card .head{
-      padding: 16px 16px 12px 16px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,.03);
-    }
-    .card .head h2{
-      margin:0;
-      font-size: 14px;
+
+    .card h2 {
+      margin: 0 0 14px 0;
+      font-size: 13px;
+      letter-spacing: 0.3px;
       color: var(--muted);
-      font-weight: 600;
-      letter-spacing: .25px;
       text-transform: uppercase;
     }
-    .card .body{padding: 16px;}
 
-    .form{
-      display:grid;
-      gap: 12px;
+    label {
+      font-size: 13px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
     }
-    .row{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-    label{color: var(--muted); font-size: 13px;}
-    input{
-      width:100%;
-      padding: 12px 12px;
+
+    input {
+      width: 100%;
+      padding: 12px;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.2);
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.25);
       color: var(--text);
+      font-size: 15px;
       outline: none;
     }
-    input:focus{border-color: rgba(124,92,255,.7); box-shadow: 0 0 0 4px rgba(124,92,255,.18);}
-    .help{color: var(--muted); font-size: 12px; margin-top: 2px;}
 
-    .actions{
-      display:flex;
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .help {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    button {
+      border: none;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), #5b3df5);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .actions {
+      display: flex;
       gap: 10px;
       flex-wrap: wrap;
       margin-top: 6px;
     }
-    button{
-      border: 0;
-      cursor: pointer;
-      padding: 12px 14px;
-      border-radius: 14px;
-      color: white;
-      font-weight: 700;
-      letter-spacing: .2px;
-      background: linear-gradient(135deg, rgba(124,92,255,1), rgba(124,92,255,.75));
-      box-shadow: 0 10px 24px rgba(124,92,255,.25);
-    }
-    button.secondary{
-      background: rgba(255,255,255,.08);
-      box-shadow: none;
-      border: 1px solid rgba(255,255,255,.16);
-      color: var(--text);
-      font-weight: 600;
-    }
-    button:active{transform: translateY(1px);}
 
-    .status{
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .status.error{
-      border-color: rgba(239,68,68,.35);
-      background: rgba(239,68,68,.08);
-      color: rgba(255,255,255,.85);
-    }
-
-    .summary{
-      display:flex;
+    .summary {
+      display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin: 0 0 12px 0;
+      margin-bottom: 14px;
     }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 10px 12px;
+
+    .pill {
+      padding: 8px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--muted);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
       font-size: 13px;
-      white-space: nowrap;
+      color: var(--muted);
     }
-    .pill b{color: var(--text); font-weight: 800;}
 
-    .tableWrap{
-      overflow:auto;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
+    .pill b {
+      color: var(--text);
+      font-weight: 700;
     }
-    table{
-      width:100%;
+
+    table {
+      width: 100%;
       border-collapse: collapse;
-      min-width: 520px;
-    }
-    thead th{
-      text-align:left;
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: .2px;
-      padding: 12px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    tbody td{
-      padding: 12px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      color: rgba(255,255,255,.88);
-    }
-    tbody tr:hover td{background: rgba(255,255,255,.03);}
-    td.num{font-variant-numeric: tabular-nums;}
-    td.right{text-align:right;}
-    .totalRow td{
-      background: rgba(34,197,94,.08);
-      border-bottom: 0;
-      font-weight: 800;
+      min-width: 480px;
     }
 
-    footer{
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 12px;
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
     }
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+
+    th {
+      text-align: left;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    td:first-child {
+      text-align: left;
+    }
+
+    tr.total {
+      background: var(--success);
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .status {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Калькулятор тарифов</h1>
-        <p class="hint">Вводишь параметры — получаешь таблицу цен от минимума до максимума мест.</p>
-      </div>
-      <div class="pill"><span class="mono">N × Цена</span></div>
-    </header>
+<div class="container">
 
-    <div class="grid">
-      <!-- LEFT: FORM -->
-      <section class="card">
-        <div class="head"><h2>Параметры</h2></div>
-        <div class="body">
-          <div class="form" id="form">
-            <div class="row">
-              <label for="places">Количество мест (max)</label>
-              <input id="places" type="number" inputmode="numeric" min="1" step="1" value="20" />
-              <div class="help">Например: 6, 8, 10, 15, 20…</div>
-            </div>
-
-            <div class="row">
-              <label for="price">Цена за человека (₽)</label>
-              <input id="price" type="number" inputmode="numeric" min="0" step="1" value="640" />
-              <div class="help">Только число, без пробелов.</div>
-            </div>
-
-            <div class="row">
-              <label for="minPeople">Минимальное количество</label>
-              <input id="minPeople" type="number" inputmode="numeric" min="1" step="1" value="3" />
-              <div class="help">Таблица начнётся с этого значения.</div>
-            </div>
-
-            <div class="actions">
-              <button id="calcBtn" type="button">Рассчитать</button>
-              <button id="copyBtn" class="secondary" type="button">Скопировать CSV</button>
-              <button id="resetBtn" class="secondary" type="button">Сброс</button>
-            </div>
-
-            <div class="status" id="status">Готово. Нажми “Рассчитать”.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- RIGHT: RESULT -->
-      <section class="card">
-        <div class="head"><h2>Результат</h2></div>
-        <div class="body">
-          <div class="summary" id="summary">
-            <div class="pill">Мест: <b id="sPlaces">—</b></div>
-            <div class="pill">Цена/чел: <b id="sPrice">—</b></div>
-            <div class="pill">Мин.: <b id="sMin">—</b></div>
-            <div class="pill">Итого (max): <b id="sMaxTotal">—</b></div>
-          </div>
-
-          <div class="tableWrap">
-            <table aria-label="Таблица цен">
-              <thead>
-                <tr>
-                  <th style="width: 30%;">Кол-во человек</th>
-                  <th style="width: 35%;" class="right">Цена за 1 чел., ₽</th>
-                  <th style="width: 35%;" class="right">Итоговая стоимость, ₽</th>
-                </tr>
-              </thead>
-              <tbody id="tbody">
-                <!-- rows injected -->
-              </tbody>
-            </table>
-          </div>
-
-          <footer>
-            Подсказка: можно публиковать как статический файл (GitHub Pages, Netlify, Vercel, etc.).
-          </footer>
-        </div>
-      </section>
+  <header>
+    <h1>Калькулятор тарифов</h1>
+    <div class="subtitle">
+      Заполните параметры — калькулятор рассчитает стоимость для разного количества гостей.
     </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- ПАРАМЕТРЫ -->
+    <div class="card">
+      <h2>Параметры</h2>
+
+      <div class="field">
+        <label>Количество мест (максимум)</label>
+        <input id="places" type="number" value="20" min="1">
+        <div class="help">Сколько гостей можно разместить максимум</div>
+      </div>
+
+      <div class="field">
+        <label>Цена за одного гостя, ₽</label>
+        <input id="price" type="number" value="640" min="0">
+      </div>
+
+      <div class="field">
+        <label>Минимальное количество гостей</label>
+        <input id="minPeople" type="number" value="3" min="1">
+        <div class="help">Минимальное количество гостей для расчёта</div>
+      </div>
+
+      <div class="actions">
+        <button onclick="calculate()">Рассчитать</button>
+        <button class="secondary" onclick="resetForm()">Сбросить</button>
+      </div>
+
+      <div class="status" id="status">Готово к расчёту</div>
+    </div>
+
+    <!-- РЕЗУЛЬТАТ -->
+    <div class="card">
+      <h2>Результат</h2>
+
+      <div class="summary">
+        <div class="pill">Мест: <b id="sPlaces">—</b></div>
+        <div class="pill">Цена: <b id="sPrice">—</b></div>
+        <div class="pill">Мин. гостей: <b id="sMin">—</b></div>
+        <div class="pill">Итого (макс): <b id="sTotal">—</b></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Количество гостей</th>
+              <th>Цена за гостя, ₽</th>
+              <th>Итоговая стоимость, ₽</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
+</div>
 
-  <script>
-    const el = (id) => document.getElementById(id);
+<script>
+  const fmt = new Intl.NumberFormat("ru-RU");
 
-    const places = el("places");
-    const price = el("price");
-    const minPeople = el("minPeople");
+  function calculate() {
+    const places = Number(document.getElementById("places").value);
+    const price = Number(document.getElementById("price").value);
+    const min = Number(document.getElementById("minPeople").value);
 
-    const status = el("status");
-    const tbody = el("tbody");
+    const body = document.getElementById("tableBody");
+    body.innerHTML = "";
 
-    const sPlaces = el("sPlaces");
-    const sPrice = el("sPrice");
-    const sMin = el("sMin");
-    const sMaxTotal = el("sMaxTotal");
-
-    const fmt = new Intl.NumberFormat("ru-RU");
-
-    function setStatus(text, isError=false){
-      status.textContent = text;
-      status.classList.toggle("error", isError);
-    }
-
-    function validateInputs(maxPlaces, pricePerPerson, minP){
-      if (!Number.isInteger(maxPlaces) || maxPlaces < 1) return "Количество мест должно быть целым числом ≥ 1";
-      if (!Number.isInteger(pricePerPerson) || pricePerPerson < 0) return "Цена за человека должна быть целым числом ≥ 0";
-      if (!Number.isInteger(minP) || minP < 1) return "Минимальное количество должно быть целым числом ≥ 1";
-      if (minP > maxPlaces) return "Минимальное количество не может быть больше количества мест";
-      return null;
-    }
-
-    function buildTable(maxPlaces, pricePerPerson, minP){
-      tbody.innerHTML = "";
-
-      for (let n = minP; n <= maxPlaces; n++){
-        const total = n * pricePerPerson;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="num">${fmt.format(n)}</td>
-          <td class="num right">${fmt.format(pricePerPerson)}</td>
-          <td class="num right">${fmt.format(total)}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-
-      // итоговая строка (для max)
-      const totalMax = maxPlaces * pricePerPerson;
-      const trTotal = document.createElement("tr");
-      trTotal.className = "totalRow";
-      trTotal.innerHTML = `
-        <td>Итого за ${fmt.format(maxPlaces)} чел.</td>
-        <td class="right">—</td>
-        <td class="num right">${fmt.format(totalMax)}</td>
+    for (let i = min; i <= places; i++) {
+      body.innerHTML += `
+        <tr>
+          <td>${fmt.format(i)}</td>
+          <td>${fmt.format(price)}</td>
+          <td>${fmt.format(i * price)}</td>
+        </tr>
       `;
-      tbody.appendChild(trTotal);
-
-      // summary
-      sPlaces.textContent = fmt.format(maxPlaces);
-      sPrice.textContent = fmt.format(pricePerPerson) + " ₽";
-      sMin.textContent = fmt.format(minP);
-      sMaxTotal.textContent = fmt.format(totalMax) + " ₽";
     }
 
-    function calculate(){
-      const maxPlaces = Number(places.value);
-      const pricePerPerson = Number(price.value);
-      const minP = Number(minPeople.value);
+    body.innerHTML += `
+      <tr class="total">
+        <td>Итого за ${places} гостей</td>
+        <td></td>
+        <td>${fmt.format(places * price)}</td>
+      </tr>
+    `;
 
-      const err = validateInputs(maxPlaces, pricePerPerson, minP);
-      if (err){
-        setStatus(err, true);
-        tbody.innerHTML = "";
-        sPlaces.textContent = sPrice.textContent = sMin.textContent = sMaxTotal.textContent = "—";
-        return;
-      }
+    document.getElementById("sPlaces").textContent = places;
+    document.getElementById("sPrice").textContent = fmt.format(price) + " ₽";
+    document.getElementById("sMin").textContent = min;
+    document.getElementById("sTotal").textContent = fmt.format(places * price) + " ₽";
 
-      buildTable(maxPlaces, pricePerPerson, minP);
-      setStatus("Готово: таблица обновлена.", false);
-    }
+    document.getElementById("status").textContent = "Расчёт выполнен";
+  }
 
-    function toCSV(){
-      const maxPlaces = Number(places.value);
-      const pricePerPerson = Number(price.value);
-      const minP = Number(minPeople.value);
-      const err = validateInputs(maxPlaces, pricePerPerson, minP);
-      if (err){ setStatus(err, true); return; }
-
-      let csv = "people,price_per_person,total\n";
-      for (let n = minP; n <= maxPlaces; n++){
-        csv += `${n},${pricePerPerson},${n * pricePerPerson}\n`;
-      }
-      csv += `max_total,,${maxPlaces * pricePerPerson}\n`;
-      return csv;
-    }
-
-    async function copyCSV(){
-      const csv = toCSV();
-      if (!csv) return;
-      try{
-        await navigator.clipboard.writeText(csv);
-        setStatus("CSV скопирован в буфер обмена.", false);
-      }catch(e){
-        setStatus("Не удалось скопировать CSV (браузер запретил доступ к буферу).", true);
-      }
-    }
-
-    function reset(){
-      places.value = 20;
-      price.value = 640;
-      minPeople.value = 3;
-      calculate();
-      setStatus("Сброшено к значениям по умолчанию.", false);
-    }
-
-    // кнопки
-    el("calcBtn").addEventListener("click", calculate);
-    el("copyBtn").addEventListener("click", copyCSV);
-    el("resetBtn").addEventListener("click", reset);
-
-    // авто-обновление при вводе
-    ["input","change"].forEach(evt => {
-      [places, price, minPeople].forEach(inp => inp.addEventListener(evt, () => {
-        // мягко: не спамим ошибками на пустом поле
-        if (inp.value === "") return;
-        calculate();
-      }));
-    });
-
-    // стартовый расчёт
+  function resetForm() {
+    document.getElementById("places").value = 20;
+    document.getElementById("price").value = 640;
+    document.getElementById("minPeople").value = 3;
     calculate();
-  </script>
+  }
+
+  calculate();
+</script>
 </body>
 </html>
