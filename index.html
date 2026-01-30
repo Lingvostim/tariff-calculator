@@ -1,418 +1,354 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Калькулятор тарифов</title>
-  <style>
-    :root{
-      --bg: #0b1020;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.09);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.65);
-      --line: rgba(255,255,255,.14);
-      --accent: #7c5cff;
-      --accent2:#22c55e;
-      --danger:#ef4444;
-      --shadow: 0 20px 60px rgba(0,0,0,.35);
-      --radius: 18px;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор тарифов</title>
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font: 15px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(124,92,255,.25), transparent 55%),
-        radial-gradient(900px 600px at 85% 20%, rgba(34,197,94,.18), transparent 50%),
-        radial-gradient(1200px 900px at 50% 100%, rgba(255,255,255,.06), transparent 60%),
-        var(--bg);
-      min-height:100vh;
-      padding: 28px 16px;
-    }
+<style>
+:root{
+  --bg1:#0b1020;
+  --bg2:#0e1222;
+  --card:rgba(255,255,255,.05);
+  --line:rgba(255,255,255,.12);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.62);
+  --accent:#6b5cff;
+  --success:#16a34a;
+  --danger:#ef4444;
+  --radius:18px;
+}
 
-    .wrap{max-width: 980px; margin: 0 auto;}
-    header{
-      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
-      margin-bottom: 18px;
-    }
-    h1{
-      font-size: clamp(20px, 3vw, 28px);
-      margin:0;
-      letter-spacing: .2px;
-    }
-    .hint{color:var(--muted); margin: 6px 0 0 0; font-size: 13px;}
+*{box-sizing:border-box}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    @media (min-width: 860px){
-      .grid{grid-template-columns: 360px 1fr;}
-    }
+body{
+  margin:0;
+  font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 800px at 15% 10%, rgba(107,92,255,.22), transparent 55%),
+    radial-gradient(900px 700px at 85% 90%, rgba(22,163,74,.16), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+  min-height:100vh;
+  padding:24px 14px;
+}
 
-    .card{
-      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.04));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card .head{
-      padding: 16px 16px 12px 16px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,.03);
-    }
-    .card .head h2{
-      margin:0;
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 600;
-      letter-spacing: .25px;
-      text-transform: uppercase;
-    }
-    .card .body{padding: 16px;}
+.wrap{max-width:980px;margin:0 auto}
 
-    .form{
-      display:grid;
-      gap: 12px;
-    }
-    .row{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-    }
-    label{color: var(--muted); font-size: 13px;}
-    input{
-      width:100%;
-      padding: 12px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.2);
-      color: var(--text);
-      outline: none;
-    }
-    input:focus{border-color: rgba(124,92,255,.7); box-shadow: 0 0 0 4px rgba(124,92,255,.18);}
-    .help{color: var(--muted); font-size: 12px; margin-top: 2px;}
+h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}
+.hint{margin:0 0 16px;color:var(--muted);font-size:13px}
 
-    .actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-    button{
-      border: 0;
-      cursor: pointer;
-      padding: 12px 14px;
-      border-radius: 14px;
-      color: white;
-      font-weight: 700;
-      letter-spacing: .2px;
-      background: linear-gradient(135deg, rgba(124,92,255,1), rgba(124,92,255,.75));
-      box-shadow: 0 10px 24px rgba(124,92,255,.25);
-    }
-    button.secondary{
-      background: rgba(255,255,255,.08);
-      box-shadow: none;
-      border: 1px solid rgba(255,255,255,.16);
-      color: var(--text);
-      font-weight: 600;
-    }
-    button:active{transform: translateY(1px);}
+.grid{display:grid;gap:16px}
+@media(min-width:860px){.grid{grid-template-columns:360px 1fr}}
 
-    .status{
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .status.error{
-      border-color: rgba(239,68,68,.35);
-      background: rgba(239,68,68,.08);
-      color: rgba(255,255,255,.85);
-    }
+.card{
+  background:linear-gradient(180deg,var(--card),rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+}
 
-    .summary{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 0 0 12px 0;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--muted);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    .pill b{color: var(--text); font-weight: 800;}
+.head{
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+}
+.head h2{
+  margin:0;
+  font-size:13px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.3px;
+}
+.body{padding:16px}
 
-    .tableWrap{
-      overflow:auto;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-    }
-    table{
-      width:100%;
-      border-collapse: collapse;
-      min-width: 520px;
-    }
-    thead th{
-      text-align:left;
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: .2px;
-      padding: 12px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    tbody td{
-      padding: 12px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      color: rgba(255,255,255,.88);
-    }
-    tbody tr:hover td{background: rgba(255,255,255,.03);}
-    td.num{font-variant-numeric: tabular-nums;}
-    td.right{text-align:right;}
-    .totalRow td{
-      background: rgba(34,197,94,.08);
-      border-bottom: 0;
-      font-weight: 800;
-    }
+.row{margin-bottom:12px}
+label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
 
-    footer{
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
-  </style>
+/* INPUT + STEPPERS */
+.inputWrap{position:relative}
+input{
+  width:100%;
+  padding:12px 52px 12px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  color:var(--text);
+  font-size:15px;
+}
+input:focus{
+  outline:none;
+  border-color:rgba(107,92,255,.9);
+  box-shadow:0 0 0 3px rgba(107,92,255,.22);
+}
+
+/* hide native spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{
+  -webkit-appearance:none;margin:0
+}
+input[type=number]{-moz-appearance:textfield}
+
+.stepper{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  display:grid;
+  grid-template-rows:1fr 1fr;
+  gap:6px;
+}
+.stepBtn{
+  width:34px;
+  height:18px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.85);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  user-select:none;
+}
+.stepBtn:hover{background:rgba(255,255,255,.1)}
+.stepBtn svg{width:12px;height:12px}
+
+.help{margin-top:6px;color:var(--muted);font-size:12px}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+button{
+  padding:12px 14px;
+  border-radius:14px;
+  border:0;
+  cursor:pointer;
+  font-weight:700;
+}
+button.primary{
+  background:linear-gradient(135deg,var(--accent),rgba(107,92,255,.8));
+  color:white;
+}
+button.secondary{
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--line);
+  color:var(--text);
+}
+@media(max-width:640px){
+  .actions button{flex:1 1 100%}
+}
+
+.status{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.05);
+  font-size:13px;
+}
+
+.summary{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.pill{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  font-size:13px;
+}
+.pill.total b{color:var(--success);font-size:16px}
+
+.tableWrap{
+  overflow:auto;
+  border-radius:14px;
+  border:1px solid var(--line);
+}
+table{width:100%;border-collapse:collapse;min-width:420px}
+thead th{
+  padding:12px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:left;
+  background:rgba(255,255,255,.04);
+}
+tbody td{
+  padding:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+td.right{text-align:right}
+
+.mobileList{display:none}
+@media(max-width:640px){
+  .tableWrap{display:none}
+  .mobileList{display:grid;gap:10px}
+  .mobileCard{
+    padding:14px;
+    border-radius:14px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.06);
+  }
+  .mobileCard b{color:var(--success);font-size:16px}
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Калькулятор тарифов</h1>
-        <p class="hint">Вводишь параметры — получаешь таблицу цен от минимума до максимума мест.</p>
-      </div>
-      <div class="pill"><span class="mono">N × Цена</span></div>
-    </header>
+<div class="wrap">
+<h1>Калькулятор тарифов</h1>
+<p class="hint">Мгновенный расчёт стоимости</p>
 
-    <div class="grid">
-      <!-- LEFT: FORM -->
-      <section class="card">
-        <div class="head"><h2>Параметры</h2></div>
-        <div class="body">
-          <div class="form" id="form">
-            <div class="row">
-              <label for="places">Количество мест (max)</label>
-              <input id="places" type="number" inputmode="numeric" min="1" step="1" value="20" />
-              <div class="help">Например: 6, 8, 10, 15, 20…</div>
-            </div>
+<div class="grid">
 
-            <div class="row">
-              <label for="price">Цена за человека (₽)</label>
-              <input id="price" type="number" inputmode="numeric" min="0" step="1" value="640" />
-              <div class="help">Только число, без пробелов.</div>
-            </div>
+<section class="card">
+<div class="head"><h2>Параметры</h2></div>
+<div class="body">
 
-            <div class="row">
-              <label for="minPeople">Минимальное количество Гостей</label>
-              <input id="minPeople" type="number" inputmode="numeric" min="1" step="1" value="3" />
-              <div class="help">Таблица начнётся с этого значения.</div>
-            </div>
+<div class="row">
+<label>Количество мест (max)</label>
+<div class="inputWrap" data-stepper>
+<input id="places" type="number" value="12" min="1" step="1">
+<div class="stepper">
+<button class="stepBtn" data-step="up">▲</button>
+<button class="stepBtn" data-step="down">▼</button>
+</div>
+</div>
+</div>
 
-            <div class="actions">
-              <button id="calcBtn" type="button">Рассчитать</button>
-              <button id="copyBtn" class="secondary" type="button">Скопировать CSV</button>
-              <button id="resetBtn" class="secondary" type="button">Сброс</button>
-            </div>
+<div class="row">
+<label>Цена за человека ₽</label>
+<div class="inputWrap" data-stepper>
+<input id="price" type="number" value="680" min="0" step="10">
+<div class="stepper">
+<button class="stepBtn" data-step="up">▲</button>
+<button class="stepBtn" data-step="down">▼</button>
+</div>
+</div>
+</div>
 
-            <div class="status" id="status">Готово. Нажми “Рассчитать”.</div>
-          </div>
-        </div>
-      </section>
+<div class="row">
+<label>Минимум гостей</label>
+<div class="inputWrap" data-stepper>
+<input id="minPeople" type="number" value="3" min="1" step="1">
+<div class="stepper">
+<button class="stepBtn" data-step="up">▲</button>
+<button class="stepBtn" data-step="down">▼</button>
+</div>
+</div>
+</div>
 
-      <!-- RIGHT: RESULT -->
-      <section class="card">
-        <div class="head"><h2>Результат</h2></div>
-        <div class="body">
-          <div class="summary" id="summary">
-            <div class="pill">Мест: <b id="sPlaces">—</b></div>
-            <div class="pill">Цена/чел: <b id="sPrice">—</b></div>
-            <div class="pill">Мин.: <b id="sMin">—</b></div>
-            <div class="pill">Итого (max): <b id="sMaxTotal">—</b></div>
-          </div>
+<div class="actions">
+<button class="primary" id="calc">Рассчитать</button>
+<button class="secondary" id="reset">Сброс</button>
+</div>
 
-          <div class="tableWrap">
-            <table aria-label="Таблица цен">
-              <thead>
-                <tr>
-                  <th style="width: 30%;">Кол-во человек</th>
-                  <th style="width: 35%;" class="right">Цена за 1 чел., ₽</th>
-                  <th style="width: 35%;" class="right">Итоговая стоимость, ₽</th>
-                </tr>
-              </thead>
-              <tbody id="tbody">
-                <!-- rows injected -->
-              </tbody>
-            </table>
-          </div>
+<div class="status" id="status">Готово</div>
+</div>
+</section>
 
-          <footer>
-          </footer>
-        </div>
-      </section>
-    </div>
-  </div>
+<section class="card">
+<div class="head"><h2>Результат</h2></div>
+<div class="body">
 
-  <script>
-    const el = (id) => document.getElementById(id);
+<div class="summary">
+<div class="pill">Мест: <b id="sPlaces">—</b></div>
+<div class="pill">Цена: <b id="sPrice">—</b></div>
+<div class="pill total">Итого: <b id="sTotal">—</b></div>
+</div>
 
-    const places = el("places");
-    const price = el("price");
-    const minPeople = el("minPeople");
+<div class="tableWrap">
+<table>
+<thead>
+<tr><th>Чел.</th><th class="right">Итого, ₽</th></tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
 
-    const status = el("status");
-    const tbody = el("tbody");
+<div class="mobileList" id="mobileList"></div>
 
-    const sPlaces = el("sPlaces");
-    const sPrice = el("sPrice");
-    const sMin = el("sMin");
-    const sMaxTotal = el("sMaxTotal");
+</div>
+</section>
 
-    const fmt = new Intl.NumberFormat("ru-RU");
+</div>
+</div>
 
-    function setStatus(text, isError=false){
-      status.textContent = text;
-      status.classList.toggle("error", isError);
-    }
+<script>
+const el=id=>document.getElementById(id)
+const fmt=new Intl.NumberFormat("ru-RU")
 
-    function validateInputs(maxPlaces, pricePerPerson, minP){
-      if (!Number.isInteger(maxPlaces) || maxPlaces < 1) return "Количество мест должно быть целым числом ≥ 1";
-      if (!Number.isInteger(pricePerPerson) || pricePerPerson < 0) return "Цена за человека должна быть целым числом ≥ 0";
-      if (!Number.isInteger(minP) || minP < 1) return "Минимальное количество должно быть целым числом ≥ 1";
-      if (minP > maxPlaces) return "Минимальное количество не может быть больше количества мест";
-      return null;
-    }
+function clamp(input,v){
+  const min=input.min!==""?+input.min:-1e9
+  const max=input.max!==""?+input.max:1e9
+  return Math.min(max,Math.max(min,v))
+}
 
-    function buildTable(maxPlaces, pricePerPerson, minP){
-      tbody.innerHTML = "";
+function stepInput(input,dir){
+  const step=input.step&&input.step!=="any"?+input.step:1
+  input.value=clamp(input,(+input.value||0)+(dir==="up"?step:-step))
+  input.dispatchEvent(new Event("input",{bubbles:true}))
+}
 
-      for (let n = minP; n <= maxPlaces; n++){
-        const total = n * pricePerPerson;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="num">${fmt.format(n)}</td>
-          <td class="num right">${fmt.format(pricePerPerson)}</td>
-          <td class="num right">${fmt.format(total)}</td>
-        `;
-        tbody.appendChild(tr);
-      }
+/* FIXED STEPPERS */
+document.querySelectorAll("[data-stepper]").forEach(w=>{
+  const input=w.querySelector("input")
+  const up=w.querySelector('[data-step="up"]')
+  const down=w.querySelector('[data-step="down"]')
+  let t=null,i=null
 
-      // итоговая строка (для max)
-      const totalMax = maxPlaces * pricePerPerson;
-      const trTotal = document.createElement("tr");
-      trTotal.className = "totalRow";
-      trTotal.innerHTML = `
-        <td>Итого за ${fmt.format(maxPlaces)} чел.</td>
-        <td class="right">—</td>
-        <td class="num right">${fmt.format(totalMax)}</td>
-      `;
-      tbody.appendChild(trTotal);
+  const start=dir=>{
+    stepInput(input,dir)
+    t=setTimeout(()=>{
+      i=setInterval(()=>stepInput(input,dir),90)
+    },350)
+  }
+  const stop=()=>{
+    clearTimeout(t);clearInterval(i)
+  }
 
-      // summary
-      sPlaces.textContent = fmt.format(maxPlaces);
-      sPrice.textContent = fmt.format(pricePerPerson) + " ₽";
-      sMin.textContent = fmt.format(minP);
-      sMaxTotal.textContent = fmt.format(totalMax) + " ₽";
-    }
+  up.addEventListener("pointerdown",e=>{e.preventDefault();start("up")})
+  down.addEventListener("pointerdown",e=>{e.preventDefault();start("down")})
+  ;["pointerup","pointerleave","pointercancel"].forEach(ev=>{
+    up.addEventListener(ev,stop)
+    down.addEventListener(ev,stop)
+  })
+})
 
-    function calculate(){
-      const maxPlaces = Number(places.value);
-      const pricePerPerson = Number(price.value);
-      const minP = Number(minPeople.value);
+function calculate(){
+  const max=+el("places").value
+  const price=+el("price").value
+  const min=+el("minPeople").value
+  if(min>max){el("status").textContent="Минимум больше максимума";return}
 
-      const err = validateInputs(maxPlaces, pricePerPerson, minP);
-      if (err){
-        setStatus(err, true);
-        tbody.innerHTML = "";
-        sPlaces.textContent = sPrice.textContent = sMin.textContent = sMaxTotal.textContent = "—";
-        return;
-      }
+  el("tbody").innerHTML=""
+  el("mobileList").innerHTML=""
 
-      buildTable(maxPlaces, pricePerPerson, minP);
-      setStatus("Готово: таблица обновлена.", false);
-    }
+  for(let n=min;n<=max;n++){
+    const total=n*price
+    el("tbody").innerHTML+=`<tr><td>${n}</td><td class="right">${fmt.format(total)}</td></tr>`
+    el("mobileList").innerHTML+=`<div class="mobileCard"><span>${n} человек</span><b>${fmt.format(total)} ₽</b></div>`
+  }
 
-    function toCSV(){
-      const maxPlaces = Number(places.value);
-      const pricePerPerson = Number(price.value);
-      const minP = Number(minPeople.value);
-      const err = validateInputs(maxPlaces, pricePerPerson, minP);
-      if (err){ setStatus(err, true); return; }
+  el("sPlaces").textContent=max
+  el("sPrice").textContent=fmt.format(price)+" ₽"
+  el("sTotal").textContent=fmt.format(max*price)+" ₽"
+  el("status").textContent="Готово"
+}
 
-      let csv = "people,price_per_person,total\n";
-      for (let n = minP; n <= maxPlaces; n++){
-        csv += `${n},${pricePerPerson},${n * pricePerPerson}\n`;
-      }
-      csv += `max_total,,${maxPlaces * pricePerPerson}\n`;
-      return csv;
-    }
+el("calc").onclick=calculate
+el("reset").onclick=()=>{places.value=12;price.value=680;minPeople.value=3;calculate()}
+;[places,price,minPeople].forEach(i=>i.addEventListener("input",calculate))
 
-    async function copyCSV(){
-      const csv = toCSV();
-      if (!csv) return;
-      try{
-        await navigator.clipboard.writeText(csv);
-        setStatus("CSV скопирован в буфер обмена.", false);
-      }catch(e){
-        setStatus("Не удалось скопировать CSV (браузер запретил доступ к буферу).", true);
-      }
-    }
-
-    function reset(){
-      places.value = 20;
-      price.value = 640;
-      minPeople.value = 3;
-      calculate();
-      setStatus("Сброшено к значениям по умолчанию.", false);
-    }
-
-    // кнопки
-    el("calcBtn").addEventListener("click", calculate);
-    el("copyBtn").addEventListener("click", copyCSV);
-    el("resetBtn").addEventListener("click", reset);
-
-    // авто-обновление при вводе
-    ["input","change"].forEach(evt => {
-      [places, price, minPeople].forEach(inp => inp.addEventListener(evt, () => {
-        // мягко: не спамим ошибками на пустом поле
-        if (inp.value === "") return;
-        calculate();
-      }));
-    });
-
-    // стартовый расчёт
-    calculate();
-  </script>
+calculate()
+</script>
 </body>
 </html>
-
