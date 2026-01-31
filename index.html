@@ -14,7 +14,7 @@
   --text:rgba(255,255,255,.92);
   --muted:rgba(255,255,255,.62);
   --accent:#6b5cff;
-  --success:#22c55e;
+  --success:#16a34a;
   --radius:18px;
 }
 
@@ -46,6 +46,11 @@ h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}
   border-radius:var(--radius);
   overflow:hidden;
   box-shadow:0 18px 60px rgba(0,0,0,.35);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 22px 70px rgba(0,0,0,.45);
 }
 
 .head{
@@ -58,15 +63,15 @@ h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}
   font-size:13px;
   color:var(--muted);
   text-transform:uppercase;
+  letter-spacing:.3px;
 }
-
 .body{padding:16px}
 
 .row{margin-bottom:12px}
 label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
 
+/* INPUT + STEPPERS */
 .inputWrap{position:relative}
-
 input{
   width:100%;
   padding:12px 52px 12px 12px;
@@ -74,15 +79,20 @@ input{
   background:rgba(255,255,255,.04);
   border:1px solid var(--line);
   color:var(--text);
+  font-size:15px;
+  transition:border-color .15s ease, box-shadow .15s ease;
 }
-
 input:focus{
   outline:none;
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(107,92,255,.2);
+  border-color:rgba(107,92,255,.9);
+  box-shadow:0 0 0 3px rgba(107,92,255,.22);
 }
 
-/* STEPPER */
+/* hide native spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0 }
+input[type=number]{ -moz-appearance:textfield }
+
 .stepper{
   position:absolute;
   right:10px;
@@ -92,47 +102,57 @@ input:focus{
   grid-template-rows:1fr 1fr;
   gap:6px;
 }
-
 .stepBtn{
-  width:32px;
+  width:34px;
   height:18px;
   border-radius:8px;
+  border:1px solid rgba(255,255,255,.14);
   background:rgba(255,255,255,.06);
-  border:1px solid var(--line);
+  color:rgba(255,255,255,.85);
   cursor:pointer;
-  font-size:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  user-select:none;
+  transition:background .12s ease, transform .12s ease;
 }
+.stepBtn:active{transform:translateY(1px)}
 
-/* BUTTONS */
-.actions{display:flex;gap:10px;margin-top:10px}
-
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
 button{
   padding:12px 14px;
   border-radius:14px;
   border:0;
-  font-weight:700;
   cursor:pointer;
+  font-weight:700;
+  transition:transform .12s ease, box-shadow .12s ease;
 }
-
-.primary{
-  background:linear-gradient(135deg,var(--accent),#5a48ff);
+button.primary{
+  background:linear-gradient(135deg,var(--accent),rgba(107,92,255,.8));
   color:white;
 }
-
-.secondary{
+button.primary:active{transform:translateY(1px)}
+button.secondary{
   background:rgba(255,255,255,.08);
   border:1px solid var(--line);
-  color:white;
+  color:var(--text);
+}
+@media(max-width:640px){
+  .actions button{flex:1 1 100%}
 }
 
-/* SUMMARY */
 .summary{
   display:flex;
   gap:8px;
   flex-wrap:wrap;
   margin-bottom:14px;
 }
-
 .pill{
   padding:8px 12px;
   border-radius:999px;
@@ -140,57 +160,37 @@ button{
   background:rgba(255,255,255,.06);
   font-size:13px;
 }
-
-/* 💚 animated total highlight */
-.pill.total{
-  animation:pop .35s ease;
-}
-
-@keyframes pop{
-  0%{transform:scale(.92);opacity:.6}
-  100%{transform:scale(1);opacity:1}
-}
-
-.pill.total b{
-  color:var(--success);
-  font-size:16px;
-}
+.pill.total b{color:var(--success);font-size:16px}
 
 /* TABLE */
 .tableWrap{
   overflow:auto;
   border-radius:14px;
   border:1px solid var(--line);
-  transition:opacity .2s ease;
 }
-
-table{width:100%;border-collapse:collapse}
+table{width:100%;border-collapse:collapse;min-width:420px}
 thead th{
   padding:12px;
   font-size:12px;
   color:var(--muted);
   text-align:left;
+  background:rgba(255,255,255,.04);
 }
-
+tbody tr{
+  animation:rowIn .25s ease both;
+}
 tbody td{
   padding:12px;
   border-top:1px solid rgba(255,255,255,.08);
 }
-
 td.right{text-align:right}
 
-/* ✨ stagger animation */
-tbody tr{
-  opacity:0;
-  transform:translateY(6px);
-  animation:rowIn .35s ease forwards;
-}
-
 @keyframes rowIn{
+  from{opacity:0;transform:translateY(6px)}
   to{opacity:1;transform:none}
 }
 
-/* mobile */
+/* MOBILE */
 .mobileList{display:none}
 @media(max-width:640px){
   .tableWrap{display:none}
@@ -198,11 +198,24 @@ tbody tr{
   .mobileCard{
     display:flex;
     justify-content:space-between;
-    padding:14px 16px;
+    align-items:center;
+    gap:14px;
+    padding:16px 18px;
     border-radius:14px;
     border:1px solid var(--line);
     background:rgba(255,255,255,.06);
-    animation:rowIn .35s ease forwards;
+    animation:rowIn .25s ease both;
+  }
+  .mc-left{
+    font-size:14px;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .mc-right{
+    font-size:16px;
+    font-weight:700;
+    color:var(--success);
+    white-space:nowrap;
   }
 }
 </style>
@@ -210,7 +223,6 @@ tbody tr{
 
 <body>
 <div class="wrap">
-
 <h1>Калькулятор тарифов</h1>
 <p class="hint">Мгновенный расчёт стоимости</p>
 
@@ -223,7 +235,7 @@ tbody tr{
 <div class="row">
 <label>Количество мест (max)</label>
 <div class="inputWrap" data-stepper>
-<input id="places" type="number" value="12" min="1">
+<input id="places" type="number" value="12" min="1" step="1">
 <div class="stepper">
 <button class="stepBtn" data-step="up">▲</button>
 <button class="stepBtn" data-step="down">▼</button>
@@ -234,7 +246,7 @@ tbody tr{
 <div class="row">
 <label>Цена за человека ₽</label>
 <div class="inputWrap" data-stepper>
-<input id="price" type="number" value="680" min="0">
+<input id="price" type="number" value="680" min="0" step="10">
 <div class="stepper">
 <button class="stepBtn" data-step="up">▲</button>
 <button class="stepBtn" data-step="down">▼</button>
@@ -243,9 +255,9 @@ tbody tr{
 </div>
 
 <div class="row">
-<label>Минимум гостей</label>
+<label>Минимум Гостей</label>
 <div class="inputWrap" data-stepper>
-<input id="minPeople" type="number" value="3" min="1">
+<input id="minPeople" type="number" value="3" min="1" step="1">
 <div class="stepper">
 <button class="stepBtn" data-step="up">▲</button>
 <button class="stepBtn" data-step="down">▼</button>
@@ -273,7 +285,9 @@ tbody tr{
 
 <div class="tableWrap">
 <table>
-<thead><tr><th>Чел.</th><th class="right">Итого ₽</th></tr></thead>
+<thead>
+<tr><th>Чел.</th><th class="right">Итого, ₽</th></tr>
+</thead>
 <tbody id="tbody"></tbody>
 </table>
 </div>
@@ -290,20 +304,37 @@ tbody tr{
 const el=id=>document.getElementById(id)
 const fmt=new Intl.NumberFormat("ru-RU")
 
-/* number animation */
-function animateNumber(node, to){
-  const from=0
-  const duration=450
-  const start=performance.now()
-
-  function frame(t){
-    const p=Math.min((t-start)/duration,1)
-    const value=Math.floor(from+(to-from)*p)
-    node.textContent=fmt.format(value)+" ₽"
-    if(p<1)requestAnimationFrame(frame)
-  }
-  requestAnimationFrame(frame)
+function clamp(input,v){
+  const min=input.min!==""?+input.min:-1e9
+  const max=input.max!==""?+input.max:1e9
+  return Math.min(max,Math.max(min,v))
 }
+function stepInput(input,dir){
+  const step=input.step&&input.step!=="any"?+input.step:1
+  input.value=clamp(input,(+input.value||0)+(dir==="up"?step:-step))
+  input.dispatchEvent(new Event("input",{bubbles:true}))
+}
+
+/* FIXED STEPPERS */
+document.querySelectorAll("[data-stepper]").forEach(w=>{
+  const input=w.querySelector("input")
+  const up=w.querySelector('[data-step="up"]')
+  const down=w.querySelector('[data-step="down"]')
+  let t=null,i=null
+
+  const start=dir=>{
+    stepInput(input,dir)
+    t=setTimeout(()=>{ i=setInterval(()=>stepInput(input,dir),90) },350)
+  }
+  const stop=()=>{ clearTimeout(t); clearInterval(i) }
+
+  up.addEventListener("pointerdown",e=>{e.preventDefault();start("up")})
+  down.addEventListener("pointerdown",e=>{e.preventDefault();start("down")})
+  ;["pointerup","pointerleave","pointercancel"].forEach(ev=>{
+    up.addEventListener(ev,stop)
+    down.addEventListener(ev,stop)
+  })
+})
 
 function calculate(){
   const max=+el("places").value
@@ -311,31 +342,22 @@ function calculate(){
   const min=+el("minPeople").value
   if(min>max)return
 
-  const tbody=el("tbody")
-  const mobile=el("mobileList")
-
-  tbody.innerHTML=""
-  mobile.innerHTML=""
+  el("tbody").innerHTML=""
+  el("mobileList").innerHTML=""
 
   for(let n=min;n<=max;n++){
     const total=n*price
-
-    const tr=document.createElement("tr")
-    tr.style.animationDelay=(n-min)*.03+"s"
-    tr.innerHTML=`<td>${n}</td><td class="right">${fmt.format(total)}</td>`
-    tbody.appendChild(tr)
-
-    const card=document.createElement("div")
-    card.className="mobileCard"
-    card.style.animationDelay=(n-min)*.03+"s"
-    card.innerHTML=`<span>${n} чел.</span><b>${fmt.format(total)} ₽</b>`
-    mobile.appendChild(card)
+    el("tbody").innerHTML+=`<tr><td>${n}</td><td class="right">${fmt.format(total)}</td></tr>`
+    el("mobileList").innerHTML+=`
+      <div class="mobileCard">
+        <span class="mc-left">${n} человек</span>
+        <b class="mc-right">${fmt.format(total)} ₽</b>
+      </div>`
   }
 
   el("sPlaces").textContent=max
   el("sPrice").textContent=fmt.format(price)+" ₽"
-
-  animateNumber(el("sTotal"), max*price)
+  el("sTotal").textContent=fmt.format(max*price)+" ₽"
 }
 
 el("calc").onclick=calculate
@@ -346,3 +368,4 @@ calculate()
 </script>
 </body>
 </html>
+добавь красивую анимацию в конце приведи полный код
