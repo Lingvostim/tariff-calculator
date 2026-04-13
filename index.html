@@ -38,7 +38,9 @@ h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}
 .hint{margin:0 0 16px;color:var(--muted);font-size:13px}
 
 .grid{display:grid;gap:16px}
-@media(min-width:860px){.grid{grid-template-columns:360px 1fr}}
+@media(min-width:860px){
+  .grid{grid-template-columns:360px 1fr}
+}
 
 .card{
   background:linear-gradient(180deg,var(--card),rgba(255,255,255,.03));
@@ -68,7 +70,12 @@ h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}
 .body{padding:16px}
 
 .row{margin-bottom:12px}
-label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+label{
+  font-size:13px;
+  color:var(--muted);
+  display:block;
+  margin-bottom:6px;
+}
 
 /* INPUT + STEPPERS */
 .inputWrap{position:relative}
@@ -88,10 +95,14 @@ input:focus{
   box-shadow:0 0 0 3px rgba(107,92,255,.22);
 }
 
-/* hide native spinners */
 input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0 }
-input[type=number]{ -moz-appearance:textfield }
+input[type=number]::-webkit-outer-spin-button{
+  -webkit-appearance:none;
+  margin:0;
+}
+input[type=number]{
+  -moz-appearance:textfield;
+}
 
 .stepper{
   position:absolute;
@@ -117,7 +128,9 @@ input[type=number]{ -moz-appearance:textfield }
   user-select:none;
   transition:background .12s ease, transform .12s ease;
 }
-.stepBtn:active{transform:translateY(1px)}
+.stepBtn:active{
+  transform:translateY(1px);
+}
 
 .actions{
   display:flex;
@@ -137,7 +150,9 @@ button.primary{
   background:linear-gradient(135deg,var(--accent),rgba(107,92,255,.8));
   color:white;
 }
-button.primary:active{transform:translateY(1px)}
+button.primary:active{
+  transform:translateY(1px);
+}
 button.secondary{
   background:rgba(255,255,255,.08);
   border:1px solid var(--line);
@@ -160,7 +175,10 @@ button.secondary{
   background:rgba(255,255,255,.06);
   font-size:13px;
 }
-.pill.total b{color:var(--success);font-size:16px}
+.pill.total b{
+  color:var(--success);
+  font-size:16px;
+}
 
 /* TABLE */
 .tableWrap{
@@ -168,7 +186,12 @@ button.secondary{
   border-radius:14px;
   border:1px solid var(--line);
 }
-table{width:100%;border-collapse:collapse;min-width:520px}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:520px;
+  table-layout:fixed;
+}
 thead th{
   padding:12px;
   font-size:12px;
@@ -182,8 +205,28 @@ tbody tr{
 tbody td{
   padding:12px;
   border-top:1px solid rgba(255,255,255,.08);
+  font-variant-numeric:tabular-nums;
 }
 td.right{text-align:right}
+
+/* Жёсткая сетка колонок */
+thead th:nth-child(1),
+tbody td:nth-child(1){
+  width:20%;
+  text-align:left;
+}
+
+thead th:nth-child(2),
+tbody td:nth-child(2){
+  width:40%;
+  text-align:right;
+}
+
+thead th:nth-child(3),
+tbody td:nth-child(3){
+  width:40%;
+  text-align:right;
+}
 
 @keyframes rowIn{
   from{opacity:0;transform:translateY(6px)}
@@ -224,85 +267,85 @@ td.right{text-align:right}
 
 <body>
 <div class="wrap">
-<h1>Калькулятор тарифов</h1>
-<p class="hint">Мгновенный расчёт стоимости</p>
+  <h1>Калькулятор тарифов</h1>
+  <p class="hint">Мгновенный расчёт стоимости</p>
 
-<div class="grid">
+  <div class="grid">
 
-<section class="card">
-<div class="head"><h2>Параметры</h2></div>
-<div class="body">
+    <section class="card">
+      <div class="head"><h2>Параметры</h2></div>
+      <div class="body">
 
-<div class="row">
-<label>Количество мест (max)</label>
-<div class="inputWrap" data-stepper>
-<input id="places" type="number" value="12" min="1" step="1">
-<div class="stepper">
-<button class="stepBtn" data-step="up" type="button">▲</button>
-<button class="stepBtn" data-step="down" type="button">▼</button>
-</div>
-</div>
-</div>
+        <div class="row">
+          <label>Количество мест (max)</label>
+          <div class="inputWrap" data-stepper>
+            <input id="places" type="number" value="12" min="1" step="1">
+            <div class="stepper">
+              <button class="stepBtn" data-step="up" type="button">▲</button>
+              <button class="stepBtn" data-step="down" type="button">▼</button>
+            </div>
+          </div>
+        </div>
 
-<div class="row">
-<label>Цена за человека ₽</label>
-<div class="inputWrap" data-stepper>
-<input id="price" type="number" value="680" min="0" step="10">
-<div class="stepper">
-<button class="stepBtn" data-step="up" type="button">▲</button>
-<button class="stepBtn" data-step="down" type="button">▼</button>
-</div>
-</div>
-</div>
+        <div class="row">
+          <label>Цена за человека ₽</label>
+          <div class="inputWrap" data-stepper>
+            <input id="price" type="number" value="680" min="0" step="10">
+            <div class="stepper">
+              <button class="stepBtn" data-step="up" type="button">▲</button>
+              <button class="stepBtn" data-step="down" type="button">▼</button>
+            </div>
+          </div>
+        </div>
 
-<div class="row">
-<label>Минимум гостей</label>
-<div class="inputWrap" data-stepper>
-<input id="minPeople" type="number" value="3" min="1" step="1">
-<div class="stepper">
-<button class="stepBtn" data-step="up" type="button">▲</button>
-<button class="stepBtn" data-step="down" type="button">▼</button>
-</div>
-</div>
-</div>
+        <div class="row">
+          <label>Минимум гостей</label>
+          <div class="inputWrap" data-stepper>
+            <input id="minPeople" type="number" value="3" min="1" step="1">
+            <div class="stepper">
+              <button class="stepBtn" data-step="up" type="button">▲</button>
+              <button class="stepBtn" data-step="down" type="button">▼</button>
+            </div>
+          </div>
+        </div>
 
-<div class="actions">
-<button class="primary" id="calc" type="button">Рассчитать</button>
-<button class="secondary" id="reset" type="button">Сброс</button>
-</div>
+        <div class="actions">
+          <button class="primary" id="calc" type="button">Рассчитать</button>
+          <button class="secondary" id="reset" type="button">Сброс</button>
+        </div>
 
-</div>
-</section>
+      </div>
+    </section>
 
-<section class="card">
-<div class="head"><h2>Результат</h2></div>
-<div class="body">
+    <section class="card">
+      <div class="head"><h2>Результат</h2></div>
+      <div class="body">
 
-<div class="summary">
-<div class="pill">Мест: <b id="sPlaces">—</b></div>
-<div class="pill">Базовая цена: <b id="sPrice">—</b></div>
-<div class="pill total">Итого: <b id="sTotal">—</b></div>
-</div>
+        <div class="summary">
+          <div class="pill">Мест: <b id="sPlaces">—</b></div>
+          <div class="pill">Базовая цена: <b id="sPrice">—</b></div>
+          <div class="pill total">Итого: <b id="sTotal">—</b></div>
+        </div>
 
-<div class="tableWrap">
-<table>
-<thead>
-<tr>
-  <th>Чел.</th>
-  <th class="right">Стандарт, ₽</th>
-  <th class="right">IDS, ₽ (+20%)</th>
-</tr>
-</thead>
-<tbody id="tbody"></tbody>
-</table>
-</div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Чел.</th>
+                <th>Стандарт, ₽</th>
+                <th>IDS, ₽ (+20%)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
 
-<div class="mobileList" id="mobileList"></div>
+        <div class="mobileList" id="mobileList"></div>
 
-</div>
-</section>
+      </div>
+    </section>
 
-</div>
+  </div>
 </div>
 
 <script>
@@ -321,12 +364,12 @@ function stepInput(input, dir){
   input.dispatchEvent(new Event("input", { bubbles:true }))
 }
 
-/* FIXED STEPPERS */
 document.querySelectorAll("[data-stepper]").forEach(w => {
   const input = w.querySelector("input")
   const up = w.querySelector('[data-step="up"]')
   const down = w.querySelector('[data-step="down"]')
-  let t = null, i = null
+  let t = null
+  let i = null
 
   const start = dir => {
     stepInput(input, dir)
@@ -340,8 +383,15 @@ document.querySelectorAll("[data-stepper]").forEach(w => {
     clearInterval(i)
   }
 
-  up.addEventListener("pointerdown", e => { e.preventDefault(); start("up") })
-  down.addEventListener("pointerdown", e => { e.preventDefault(); start("down") })
+  up.addEventListener("pointerdown", e => {
+    e.preventDefault()
+    start("up")
+  })
+
+  down.addEventListener("pointerdown", e => {
+    e.preventDefault()
+    start("down")
+  })
 
   ;["pointerup","pointerleave","pointercancel"].forEach(ev => {
     up.addEventListener(ev, stop)
@@ -359,7 +409,7 @@ function calculate(){
     el("mobileList").innerHTML = ""
     el("sPlaces").textContent = max
     el("sPrice").textContent = fmt.format(price) + " ₽"
-    el("sTotal").textContent = "Ошибка: минимум больше максимума"
+    el("sTotal").textContent = "Ошибка"
     return
   }
 
@@ -373,17 +423,15 @@ function calculate(){
     el("tbody").innerHTML += `
       <tr>
         <td>${n}</td>
-        <td class="right">${fmt.format(total)}</td>
-        <td class="right">${fmt.format(totalIds)}</td>
+        <td>${fmt.format(total)}</td>
+        <td>${fmt.format(totalIds)}</td>
       </tr>
     `
 
     el("mobileList").innerHTML += `
       <div class="mobileCard">
         <span class="mc-left">${n} человек</span>
-        <b class="mc-right">
-          ${fmt.format(total)} ₽ / ${fmt.format(totalIds)} ₽ IDS
-        </b>
+        <b class="mc-right">${fmt.format(total)} ₽ / ${fmt.format(totalIds)} ₽ IDS</b>
       </div>
     `
   }
@@ -396,13 +444,14 @@ function calculate(){
   el("sTotal").textContent = `${fmt.format(total)} ₽ / ${fmt.format(totalIds)} ₽ IDS`
 }
 
-el("calc").onclick = calculate
-el("reset").onclick = () => {
+el("calc").addEventListener("click", calculate)
+
+el("reset").addEventListener("click", () => {
   el("places").value = 12
   el("price").value = 680
   el("minPeople").value = 3
   calculate()
-}
+})
 
 ;["places","price","minPeople"].forEach(id => {
   el(id).addEventListener("input", calculate)
